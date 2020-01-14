@@ -1,0 +1,1 @@
+pyinstaller --clean --icon=icon.ico --add-binary "xdelta.exe;." --distpath . -F tool.py
