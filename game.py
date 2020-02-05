@@ -39,18 +39,25 @@ def readShiftJIS(f, encoding="shift_jis"):
     return sjis
 
 
-def writeShiftJIS(f, s, encoding="shift_jis"):
+def writeShiftJIS(f, s, maxlen=0, encoding="shift_jis"):
     x = 0
+    strlen = 0
     s = s.replace("～", "〜")
     while x < len(s):
         c = s[x]
         if c == "|":
             f.writeByte(0x0A)
+            strlen += 1
         elif ord(c) < 128:
             f.writeByte(ord(c))
+            strlen += 1
         else:
             f.write(c.encode(encoding))
+            strlen += 2
         x += 1
+        if maxlen > 0 and strlen >= maxlen:
+            return -1
+    return strlen
 
 
 def detectShiftJIS(f, encoding="shift_jis"):

@@ -1,9 +1,9 @@
 import os
 import click
 import game
-from hacktools import common, psp, nds
+from hacktools import common, psp
 
-version = "0.6.0"
+version = "0.7.0"
 isofile = "data/disc.iso"
 isopatch = "data/disc_patched.iso"
 patchfile = "data/patch.xdelta"
@@ -36,7 +36,7 @@ def extract(iso, bin, smd, img):
         binfile = "data/extract/PSP_GAME/SYSDIR/BOOT.BIN"
         outfile = "data/bin_output.txt"
         common.logMessage("Extracting BIN to", outfile, "...")
-        foundstrings = nds.extractBinaryStrings(binfile, outfile, game.binrange, game.detectShiftJIS)
+        foundstrings = psp.extractBinaryStrings(binfile, outfile, game.binrange, game.detectShiftJIS)
         common.logMessage("Done! Extracted", len(foundstrings), "lines")
     if all or smd:
         import extract_smd
@@ -56,7 +56,9 @@ def repack(no_iso, bin, smd, img):
     if all or smd:
         import repack_smd
         repack_smd.run()
-    # TODO bin
+    if all or bin:
+        import repack_bin
+        repack_bin.run()
     if all or img:
         import repack_img
         repack_img.run()
