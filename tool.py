@@ -3,7 +3,7 @@ import click
 import game
 from hacktools import common, psp
 
-version = "0.7.0"
+version = "0.7.1"
 isofile = "data/disc.iso"
 isopatch = "data/disc_patched.iso"
 patchfile = "data/patch.xdelta"

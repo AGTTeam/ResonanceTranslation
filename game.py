@@ -68,7 +68,10 @@ def detectShiftJIS(f, encoding="shift_jis"):
         if b1 == 0:
             return ret
         if ret != "" and b1 in bincodes:
-            ret += "<" + common.toHex(b1) + ">"
+            if b1 == 0x0A:
+                ret += "|"
+            else:
+                ret += "<" + common.toHex(b1) + ">"
             continue
         elif b1 >= 28 and b1 <= 126 and sjis > 0:
             ret += chr(b1)
