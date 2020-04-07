@@ -3,13 +3,15 @@ import click
 import game
 from hacktools import common, psp
 
-version = "0.7.1"
-isofile = "data/disc.iso"
-isopatch = "data/disc_patched.iso"
+version = "0.8.0"
+isofile = "data/resonance.iso"
+isopatch = "data/resonance_patched.iso"
 patchfile = "data/patch.xdelta"
 infolder = "data/extract/"
 fpkin = "data/extract/PSP_GAME/USRDIR/"
 fpkout = "data/extract_FPK/"
+fpkin_ps2 = "data/extract_PS2_DATA/"
+fpkout_ps2 = "data/extract_PS2_FPK/"
 fpkrepack = "data/repack_FPK/"
 outfolder = "data/repack/"
 outdatafolder = "data/repack/PSP_GAME/USRDIR/"
@@ -18,11 +20,12 @@ replacefolder = "data/replace/"
 
 @common.cli.command()
 @click.option("--iso", is_flag=True, default=False)
+@click.option("--ps2", is_flag=True, default=False)
 @click.option("--bin", is_flag=True, default=False)
 @click.option("--smd", is_flag=True, default=False)
 @click.option("--img", is_flag=True, default=False)
-def extract(iso, bin, smd, img):
-    all = not iso and not bin and not smd and not img
+def extract(iso, ps2, bin, smd, img):
+    all = not iso and not ps2 and not bin and not smd and not img
     if all or iso:
         psp.extractIso(isofile, infolder, outfolder)
         common.logMessage("Extracting FPK ...")
@@ -30,20 +33,39 @@ def extract(iso, bin, smd, img):
         files = common.getFiles(fpkin, ".fpk")
         for file in common.showProgress(files):
             common.logDebug("Processing", file, "...")
-            extractFPK(fpkin + file)
+            extractFPK(fpkin + file, fpkin, fpkout)
+        common.logMessage("Done!")
+    if all or ps2:
+        import extract_ps2
+        extract_ps2.run()
+        common.logMessage("Extracting FPK ...")
+        common.makeFolder(fpkout_ps2)
+        files = common.getFiles(fpkin_ps2, ".fpk")
+        for file in common.showProgress(files):
+            common.logDebug("Processing", file, "...")
+            extractFPK(fpkin_ps2 + file, fpkin_ps2, fpkout_ps2)
         common.logMessage("Done!")
     if all or bin:
         binfile = "data/extract/PSP_GAME/SYSDIR/BOOT.BIN"
         outfile = "data/bin_output.txt"
         common.logMessage("Extracting BIN to", outfile, "...")
-        foundstrings = psp.extractBinaryStrings(binfile, outfile, game.binrange, game.detectShiftJIS)
+        elf = psp.readELF(binfile)
+        foundstrings = psp.extractBinaryStrings(elf, binfile, outfile, game.detectShiftJIS)
+        common.logMessage("Done! Extracted", len(foundstrings), "lines")
+        binfile = "data/extract_PS2/SLPS_259.12;1"
+        outfile = "data/bin_output_PS2.txt"
+        common.logMessage("Extracting BIN to", outfile, "...")
+        elf = psp.readELF(binfile)
+        foundstrings = psp.extractBinaryStrings(elf, binfile, outfile, game.detectShiftJIS)
         common.logMessage("Done! Extracted", len(foundstrings), "lines")
     if all or smd:
         import extract_smd
-        extract_smd.run()
+        extract_smd.run(False)
+        extract_smd.run(True)
     if all or img:
         import extract_img
-        extract_img.run()
+        extract_img.run(False)
+        extract_img.run(True)
 
 
 @common.cli.command()
@@ -82,8 +104,8 @@ def repack(no_iso, bin, smd, img):
         psp.repackIso(isofile, isopatch, outfolder, patchfile)
 
 
-def extractFPK(fpk, add=""):
-    fpkfolder = fpk.replace(fpkin, fpkout).replace(".fpk", "_fpk" + add) + "/"
+def extractFPK(fpk, folderin, folderout, add=""):
+    fpkfolder = fpk.replace(folderin, folderout).replace(".fpk", "_fpk" + add) + "/"
     common.makeFolders(fpkfolder)
     with common.Stream(fpk, "rb") as f:
         f.seek(4)  # Header: FPK 0x00
@@ -105,7 +127,7 @@ def extractFPK(fpk, add=""):
                 newf.write(f.read(size))
             # Nested fpk files
             if subname.endswith(".fpk"):
-                extractFPK(fpkfolder + subname, "2")
+                extractFPK(fpkfolder + subname, folderin, folderout, "2")
 
 
 def repackFPK(fpki, fpk, add=""):

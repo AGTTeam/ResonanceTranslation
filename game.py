@@ -4,8 +4,6 @@ from hacktools import common
 codes = [0x0D, 0x0A]
 # Control codes found in BIN strings
 bincodes = [0x0A, 0x20]
-# Ranges for BIN string locations
-binrange = (1569272, 1614800)
 
 
 def readShiftJIS(f, encoding="shift_jis"):
@@ -70,10 +68,12 @@ def detectShiftJIS(f, encoding="shift_jis"):
         if ret != "" and b1 in bincodes:
             if b1 == 0x0A:
                 ret += "|"
+            elif b1 == 0x20:
+                ret += " "
             else:
                 ret += "<" + common.toHex(b1) + ">"
             continue
-        elif b1 >= 28 and b1 <= 126 and sjis > 0:
+        elif b1 >= 28 and b1 <= 126:
             ret += chr(b1)
             continue
         b2 = f.readByte()

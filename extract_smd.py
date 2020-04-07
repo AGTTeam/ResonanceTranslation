@@ -3,9 +3,13 @@ import game
 from hacktools import common
 
 
-def run():
-    infolder = "data/extract/PSP_GAME/USRDIR/Shibusen/Message/"
-    outfile = "data/smd_output.txt"
+def run(ps2):
+    if ps2:
+        infolder = "data/extract_PS2_DATA/"
+        outfile = "data/smd_output_PS2.txt"
+    else:
+        infolder = "data/extract/PSP_GAME/USRDIR/Shibusen/Message/"
+        outfile = "data/smd_output.txt"
 
     common.logMessage("Extracting SMD to", outfile, "...")
     with codecs.open(outfile, "w", "utf-8") as out:

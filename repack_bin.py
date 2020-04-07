@@ -1,7 +1,7 @@
 import codecs
 import os
 import game
-from hacktools import common
+from hacktools import common, psp
 
 
 def run():
@@ -20,11 +20,12 @@ def run():
     with codecs.open(binfile, "r", "utf-8") as bin:
         section = common.getSection(bin, "")
         chartot, transtot = common.getSectionPercentage(section)
+    elf = psp.readELF(binin)
+    rodata = elf.sectionsdict[".rodata"]
     with common.Stream(binin, "rb") as fi:
         with common.Stream(binout, "r+b") as fo:
-            # Skip the beginning and end of the file to avoid false-positives
-            fi.seek(game.binrange[0])
-            while fi.tell() < game.binrange[1]:
+            fi.seek(rodata.offset)
+            while fi.tell() < rodata.offset + rodata.size:
                 pos = fi.tell()
                 check = game.detectShiftJIS(fi)
                 if check in section and section[check][0] != "":
@@ -39,4 +40,10 @@ def run():
                         fo.writeZero(endpos - fo.tell())
                 fi.seek(pos + 1)
     common.logMessage("Done! Translation is at {0:.2f}%".format((100 * transtot) / chartot))
-    common.copyFile(binout, ebinout)
+    common.logMessage("Signing BIN...")
+    sign_np = common.bundledExecutable("sign_np.exe")
+    if not os.path.isfile(sign_np):
+        common.logError("sign_np not found")
+    else:
+        common.execute(sign_np + " -elf {binout} {ebinout} 0".format(binout=binout, ebinout=ebinout), False)
+        common.logMessage("Done!")

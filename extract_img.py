@@ -2,10 +2,15 @@ import os
 from hacktools import common, psp
 
 
-def run():
-    infolder = "data/extract/PSP_GAME/USRDIR/"
-    infolderfpk = "data/extract_FPK/"
-    outfolder = "data/extract_IMG/"
+def run(ps2):
+    if ps2:
+        infolder = "data/extract_PS2_DATA/"
+        infolderfpk = "data/extract_PS2_FPK/"
+        outfolder = "data/extract_PS2_IMG/"
+    else:
+        infolder = "data/extract/PSP_GAME/USRDIR/"
+        infolderfpk = "data/extract_FPK/"
+        outfolder = "data/extract_IMG/"
     common.makeFolder(outfolder)
 
     common.logMessage("Extracting GIM to", outfolder, "...")

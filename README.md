@@ -1,6 +1,6 @@
 # Resonance Translation
 ## Setup
-Create a "data" folder and copy the rom as "disc.iso" in it.  
+Create a "data" folder and copy the PSP image as "resonance.iso" in it, and the PS2 image as "resonance_ps2.iso".  
 ## Run from binary
 Download the latest [release](https://github.com/Illidanz/ResonanceTranslation/releases) outside the data folder.  
 Run "tool extract" to extract everything and "tool repack" to repack after editing.  
