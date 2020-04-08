@@ -22,10 +22,6 @@ def run():
 
     if os.path.isfile(isofileps2):
         psp.extractIso(isofileps2, infolderps2)
-        # Header size is 8508? +4 0 begin, +8/12 end?
-        # First file is at 212992: Black_0.scb, length 1268, actual "Sector size" is 16384 (0x4000)
-        # "File table" starts at 16384 (0x4000), len 187880 (0x2DDE8), sector size 196608 (0x30000 = 12*0x4000)
-        # First FPK file is at 2228224 / 0x220000, maybe info is at 0xE44?, file is Effect\Eff00\effect.pack, size 205584 (0x32310), sec size 212992 (0x34000 = 13*0x4000)
         common.logMessage("Extracting PS2 DATA ...")
         common.makeFolder(dataout)
         with common.Stream(datain, "rb") as f:
@@ -73,7 +69,7 @@ def run():
                 common.logDebug(str(i) + "@" + str(f.tell() - 12) + ":" + str(vars(ps2file)))
                 ps2files.append(ps2file)
             common.logDebug("maxoff:" + str(maxoff) + " maxsize:" + str(maxsize))
-            # Sort files
+            # Sort files?
             # ps2files.sort(key=lambda x: x.offset)
             # Extract files
             for i in range(len(ps2files)):
