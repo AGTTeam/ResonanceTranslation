@@ -38,6 +38,15 @@ def extract(fpk, folderin, folderout, add=""):
                 extract(fpkfolder + subname, folderin, folderout, "2")
 
 
+def repackFolder(folderin, folderout, fpkin, fpkout, fpkrepack, add=""):
+    files = common.getFiles(folderin, ".fpk")
+    for file in common.showProgress(files):
+        common.logDebug("Processing", file, "...")
+        common.makeFolders(os.path.dirname(folderout + file))
+        repack(folderin + file, folderout + file, fpkin, fpkout, fpkrepack, add)
+    common.logMessage("Done!")
+
+
 def repack(fpki, fpk, folderin, folderout, folderrepack, add=""):
     fpkfolder = fpki.replace(folderin, folderout).replace(".fpk", "_fpk" + add) + "/"
     with common.Stream(fpki, "rb") as fin:

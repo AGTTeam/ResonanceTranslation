@@ -4,9 +4,13 @@ import game
 from hacktools import common
 
 
-def run():
+def run(ps2):
     infolder = "data/extract/PSP_GAME/USRDIR/Shibusen/Message/"
     outfolder = "data/repack/PSP_GAME/USRDIR/Shibusen/Message/"
+    if ps2:
+        outfolder_ps2 = outfolder.replace("repack/PSP_GAME/USRDIR/", "repack_PS2_DATA/")
+        common.copyFolder(outfolder, outfolder_ps2)
+        return
     infile = "data/smd_input.txt"
     chartot = transtot = 0
 

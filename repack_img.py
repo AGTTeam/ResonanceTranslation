@@ -2,14 +2,22 @@ import os
 from hacktools import common, psp
 
 
-def run():
-    workfolder = "data/work_IMG/"
-    extractfolder = "data/extract/PSP_GAME/USRDIR/"
-    extractfpkfolder = "data/extract_FPK/"
-    workfolder = "data/work_IMG/"
-    repackfolder = "data/repack/PSP_GAME/USRDIR/"
-    repackfpkfolder = "data/repack_FPK/"
-    common.makeFolder(repackfpkfolder)
+def run(ps2):
+    if ps2:
+        workfolder = "data/work_PS2_IMG/"
+        extractfolder = "data/extract_PS2_DATA/"
+        extractfpkfolder = "data/extract_PS2_FPK/"
+        repackfolder = "data/repack_PS2_DATA/"
+        repackfpkfolder = "data/repack_PS2_FPK/"
+        repackfolder_psp = "data/repack/PSP_GAME/USRDIR/"
+        repackfpkfolder_psp = "data/repack_FPK/"
+    else:
+        workfolder = "data/work_IMG/"
+        extractfolder = "data/extract/PSP_GAME/USRDIR/"
+        extractfpkfolder = "data/extract_FPK/"
+        repackfolder = "data/repack/PSP_GAME/USRDIR/"
+        repackfpkfolder = "data/repack_FPK/"
+        common.makeFolder(repackfpkfolder)
 
     common.logMessage("Repacking GIM from", workfolder, "...")
     files = common.getFiles(extractfolder, ".gim") + common.getFiles(extractfpkfolder, ".gim")
@@ -47,3 +55,14 @@ def run():
                     pngfile = workfolder + file + "/" + gmo.names[i] + ".png"
                     if os.path.isfile(pngfile):
                         psp.writeGIM(repack + file, gim, pngfile)
+
+    # Merge same files from PSP to PS2
+    if ps2:
+        repackfiles = common.getFiles(repackfolder_psp)
+        for repackfile in repackfiles:
+            if os.path.isfile(repackfolder + repackfile):
+                common.copyFile(repackfolder_psp + repackfile, repackfolder + repackfile)
+        repackfiles = common.getFiles(repackfpkfolder_psp)
+        for repackfile in repackfiles:
+            if os.path.isfile(repackfpkfolder + repackfile):
+                common.copyFile(repackfpkfolder_psp + repackfile, repackfpkfolder + repackfile)

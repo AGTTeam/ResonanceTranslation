@@ -46,6 +46,13 @@ def writeShiftJIS(f, s, maxlen=0, encoding="shift_jis"):
         if c == "|":
             f.writeByte(0x0A)
             strlen += 1
+        elif c == "U" and x < len(s) - 4 and s[x:x+4] == "UNK(":
+            code = s[x+4] + s[x+5]
+            f.write(bytes.fromhex(code))
+            code = s[x+6] + s[x+7]
+            f.write(bytes.fromhex(code))
+            x += 8
+            strlen += 2
         elif ord(c) < 128:
             f.writeByte(ord(c))
             strlen += 1
@@ -90,3 +97,29 @@ def detectShiftJIS(f, encoding="shift_jis"):
             ret += "UNK(" + common.toHex(b1) + common.toHex(b2) + ")"
         else:
             return ""
+
+
+def detectUTF(f, encoding="utf_8"):
+    pos = f.tell()
+    strlen = 0
+    while True:
+        byte = f.readByte()
+        if byte == 0:
+            break
+        else:
+            strlen += 1
+    f.seek(pos)
+    try:
+        return f.read(strlen).decode(encoding).replace("\n", "|").replace("\r", "")
+    except UnicodeDecodeError:
+        return ""
+
+
+def writeUTF(f, s, maxlen=0, encoding="utf_8"):
+    encoded = s.replace("～", "〜").replace("|", "\n").encode(encoding)
+    if maxlen != -1 and len(encoded) > maxlen:
+        common.logError("UTF String", s, "is too long.")
+        encoded = encoded[:maxlen]
+    f.write(encoded)
+    f.writeByte(0x00)
+    return len(encoded)
