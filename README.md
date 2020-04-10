@@ -15,7 +15,7 @@ venv\Scripts\activate
 pip install -r requirements.txt
 pip install -e ../hacktools
 ```
-Run tool.py or build with build.bat  
+Run tool.py or build with "pyinstaller tool.spec"  
 ## Text Editing
 Rename the \*\_output.txt files to \*\_input.txt (smd_output.txt to smd_input.txt, etc) and add translations for each line after the "=" sign.  
 To blank out a line, use a single "!". If just left empty, the line will be left untranslated.  
