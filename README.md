@@ -7,6 +7,7 @@ Run "tool extract" to extract everything and "tool repack" to repack after editi
 Run "tool extract --help" or "tool repack --help" for more info.  
 ## Run from source
 Install [Python 3.7](https://www.python.org/downloads/), pip and virtualenv.  
+Download [armips.exe](https://github.com/Kingcom/armips/releases).  
 Download xdelta.exe.  
 Pull [hacktools](https://github.com/Illidanz/hacktools) in the parent folder.  
 ```

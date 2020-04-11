@@ -4,8 +4,8 @@ block_cipher = None
 
 
 a = Analysis(['tool.py'],
-             pathex=['d:\\roms\\resonance'],
-             binaries=[('xdelta.exe', '.'), ('sign_np.exe', '.')],
+             pathex=['D:\\roms\\resonance'],
+             binaries=[('xdelta.exe', '.'), ('sign_np.exe', '.'), ('armips.exe', '.')],
              datas=[],
              hiddenimports=['pkg_resources.py2_warn'],
              hookspath=[],
