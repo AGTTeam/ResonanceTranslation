@@ -1,1 +1,1 @@
-pyinstaller --clean --icon=icon.ico --add-binary "xdelta.exe;." --add-binary "sign_np.exe;." --add-binary "armips.exe;." --distpath . -F --hidden-import="pkg_resources.py2_warn" tool.py
+pyinstaller --clean --icon=icon.ico --add-binary "xdelta.exe;." --add-binary "sign_np.exe;." --add-binary "armips.exe;." --add-data "bin_patch.asm;." --add-data "bin_patch_PS2.asm;." --distpath . -F --hidden-import="pkg_resources.py2_warn" tool.py

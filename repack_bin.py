@@ -8,12 +8,12 @@ def run(ps2):
     if ps2:
         binin = "data/extract_PS2/SLPS_259.12;1"
         binout = "data/repack_PS2/SLPS_259.12;1"
-        binpatch = "data/bin_patch_PS2.asm"
+        binpatch = "bin_patch_PS2.asm"
     else:
         binin = "data/extract/PSP_GAME/SYSDIR/BOOT.BIN"
         binout = "data/repack/PSP_GAME/SYSDIR/BOOT.BIN"
         ebinout = "data/repack/PSP_GAME/SYSDIR/EBOOT.BIN"
-        binpatch = "data/bin_patch.asm"
+        binpatch = "bin_patch.asm"
     binfile = "data/bin_input.txt"
 
     if not os.path.isfile(binfile):
@@ -31,11 +31,10 @@ def run(ps2):
     psp.repackBinaryStrings(elf, section, binin, binout, game.detectShiftJIS, game.writeShiftJIS)
     psp.repackBinaryStrings(elf, section, binin, binout, game.detectUTF, game.writeUTF, "utf_8")
     common.logMessage("Done! Translation is at {0:.2f}%".format((100 * transtot) / chartot))
-    if os.path.isfile(binpatch):
-        common.armipsPatch(binpatch)
+    common.armipsPatch(common.bundledFile(binpatch))
     if not ps2:
-        common.logMessage("Signing BIN...")
-        sign_np = common.bundledExecutable("sign_np.exe")
+        common.logMessage("Signing BIN ...")
+        sign_np = common.bundledFile("sign_np.exe")
         if not os.path.isfile(sign_np):
             common.logError("sign_np not found")
         else:
