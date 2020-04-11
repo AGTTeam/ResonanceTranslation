@@ -39,5 +39,5 @@ def run(ps2):
         if not os.path.isfile(sign_np):
             common.logError("sign_np not found")
         else:
-            common.execute(sign_np + " -elf {binout} {ebinout} 0".format(binout=binout, ebinout=ebinout), False)
+            common.execute(sign_np + " -elf {binout} {ebinout} 2".format(binout=binout, ebinout=ebinout), False)
             common.logMessage("Done!")
