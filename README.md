@@ -6,17 +6,11 @@ Download the latest [release](https://github.com/Illidanz/ResonanceTranslation/r
 Run "tool extract" to extract everything and "tool repack" to repack after editing.  
 Run "tool extract --help" or "tool repack --help" for more info.  
 ## Run from source
-Install [Python 3.7](https://www.python.org/downloads/), pip and virtualenv.  
+Install [Python 3.8](https://www.python.org/downloads/) and pipenv.  
 Download [armips.exe](https://github.com/Kingcom/armips/releases).  
 Download xdelta.exe.  
-Pull [hacktools](https://github.com/Illidanz/hacktools) in the parent folder.  
-```
-virtualenv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-pip install -e ../hacktools
-```
-Run tool.py or build with "pyinstaller tool.spec"  
+Run "pipenv install".  
+Run the tool with "pipenv run tool.py" or build with "pipenv run pyinstaller tool.spec".  
 ## Text Editing
 Rename the \*\_output.txt files to \*\_input.txt (smd_output.txt to smd_input.txt, etc) and add translations for each line after the "=" sign.  
 To blank out a line, use a single "!". If just left empty, the line will be left untranslated.  

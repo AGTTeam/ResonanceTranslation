@@ -1,8 +1,7 @@
 __pycache__
 
-venv
 build
-noesis
 data*
 *.log
 *.exe
+notes.md
