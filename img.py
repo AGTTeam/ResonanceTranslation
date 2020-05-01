@@ -45,15 +45,10 @@ def readFiles(f):
         ps2file.size = f.readUInt()
         common.logDebug(str(i) + "@" + str(f.tell() - 12) + ":" + str(vars(ps2file)))
         f.seek(ps2file.offset)
-        ps2file.name = "file"
-        if ps2file.index < 10:
-            ps2file.name += "0"
-        if ps2file.index < 100:
-            ps2file.name += "0"
         ps2file.extension = ".bin"
         header = f.readString(3)
         if header in fileheaders:
             ps2file.extension = fileheaders[header]
-        ps2file.name += str(ps2file.index) + ps2file.extension
+        ps2file.name += "file" + str(ps2file.index).zfill(3) + ps2file.extension
         ps2files.append(ps2file)
     return ps2files
