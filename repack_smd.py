@@ -21,6 +21,8 @@ def run(ps2):
     common.logMessage("Repacking SMD from", infile, "...")
     with codecs.open(infile, "r", "utf-8") as smd:
         files = common.getFiles(infolder, ".smd")
+        commonsection = common.getSection(smd, "COMMON")
+        chartot, transtot = common.getSectionPercentage(commonsection)
         for file in common.showProgress(files):
             section = common.getSection(smd, file)
             if len(section) == 0:
@@ -39,20 +41,21 @@ def run(ps2):
                     f.write(fin.read(strnum * 4))
                     fin.seek(8)
                     for i in range(strnum):
-                        fin.seek(8 + 4 * i)
+                        fin.seek(8 + i * 4)
                         offset = fin.readUInt()
                         fin.seek(offset)
                         f.seek(offset)
                         f.write(fin.read(16))
                         check = game.readShiftJIS(fin)
+                        newsjis = ""
                         if check in section:
                             newsjis = section[check].pop(0)
                             if len(section[check]) == 0:
                                 del section[check]
-                            if newsjis != "":
-                                game.writeShiftJIS(f, newsjis)
-                            else:
-                                game.writeShiftJIS(f, check)
+                        elif check in commonsection:
+                            newsjis = commonsection[check][0]
+                        if newsjis != "":
+                            game.writeShiftJIS(f, newsjis)
                         else:
                             game.writeShiftJIS(f, check)
                     f.seek(size - 1)

@@ -3,7 +3,7 @@ import click
 import fpk
 from hacktools import common, psp
 
-version = "1.0.0"
+version = "1.1.0"
 isofile = "data/resonance.iso"
 isopatch = "data/resonance_patched.iso"
 patchfile = "data/patch.xdelta"
@@ -40,7 +40,7 @@ def extract(iso, ps2, bin, smd, img, cmp):
     if all or iso:
         psp.extractIso(isofile, infolder, outfolder)
         fpk.extractFolder(fpkin, fpkout)
-    if all or ps2:
+    if (all or ps2) and os.path.isfile(isofile_ps2):
         import extract_ps2
         ps2files = extract_ps2.run()
         if len(ps2files) > 0:
@@ -52,14 +52,16 @@ def extract(iso, ps2, bin, smd, img, cmp):
     if all or bin:
         import extract_bin
         extract_bin.run(False)
-        extract_bin.run(True)
+        if os.path.isfile(isofile_ps2):
+            extract_bin.run(True)
     if all or smd:
         import extract_smd
         extract_smd.run(False)
     if all or img:
         import extract_img
         extract_img.run(False)
-        extract_img.run(True)
+        if os.path.isfile(isofile_ps2):
+            extract_img.run(True)
 
 
 @common.cli.command()
@@ -69,22 +71,27 @@ def extract(iso, ps2, bin, smd, img, cmp):
 @click.option("--smd", is_flag=True, default=False)
 @click.option("--img", is_flag=True, default=False)
 def repack(no_psp, no_ps2, bin, smd, img):
+    if not os.path.isfile(isofile_ps2):
+        no_ps2 = True
     all = not bin and not smd and not img
     if all or smd:
         import repack_smd
         repack_smd.run(False)
-        repack_smd.run(True)
+        if not no_ps2:
+            repack_smd.run(True)
     if all or bin:
         import repack_bin
         repack_bin.run(False)
-        repack_bin.run(True)
+        if not no_ps2:
+            repack_bin.run(True)
     if all or img:
         import repack_img
         repack_img.run(False)
-        repack_img.run(True)
+        if not no_ps2:
+            repack_img.run(True)
     if os.path.isdir(replacefolder):
         common.mergeFolder(replacefolder, outfolder)
-    if os.path.isdir(replacefolder_ps2):
+    if os.path.isdir(replacefolder_ps2) and not no_ps2:
         common.mergeFolder(replacefolder_ps2, datarepack_ps2)
 
     if not no_psp:
@@ -102,6 +109,24 @@ def repack(no_psp, no_ps2, bin, smd, img):
         import repack_ps2
         repack_ps2.run()
         psp.repackIso(isofile_ps2, isopatch_ps2, outfolder_ps2, patchfile_ps2)
+
+
+@common.cli.command()
+def dupe():
+    seen = {}
+    sections = common.getSections("data/smd_input.txt")
+    for section in sections:
+        for line in sections[section]:
+            translation = sections[section][line][0]
+            if line not in seen:
+                seen[line] = [translation, section, 1]
+            else:
+                seen[line][2] += 1
+                if translation != seen[line][0]:
+                    common.logMessage("{}: {}={} ({} @{})".format(section, line, translation, seen[line][0], seen[line][1]))
+    for line in seen:
+        if seen[line][2] > 2:
+            common.logMessage("Dupe", seen[line][2], line + "=")
 
 
 if __name__ == "__main__":

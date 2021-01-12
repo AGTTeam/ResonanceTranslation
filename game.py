@@ -4,6 +4,8 @@ from hacktools import common
 codes = [0x0D, 0x0A]
 # Control codes found in BIN strings
 bincodes = [0x0A, 0x20]
+# Wordwrap value
+wordwrap = 300
 
 
 def readShiftJIS(f, encoding="shift_jis"):

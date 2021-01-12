@@ -34,7 +34,7 @@ def run(ps2):
     common.armipsPatch(common.bundledFile(binpatch))
     if not ps2:
         common.logMessage("Signing BIN ...")
-        sign_np = common.bundledFile("sign_np.exe")
+        sign_np = common.bundledExecutable("sign_np.exe")
         if not os.path.isfile(sign_np):
             common.logError("sign_np not found")
         else:
