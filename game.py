@@ -1,3 +1,4 @@
+import codecs
 from hacktools import common
 
 # Control codes found in strings
@@ -5,7 +6,7 @@ codes = [0x0D, 0x0A]
 # Control codes found in BIN strings
 bincodes = [0x0A, 0x20]
 # Wordwrap value
-wordwrap = 300
+wordwrap = 290
 
 
 def readShiftJIS(f, encoding="shift_jis"):
@@ -125,3 +126,13 @@ def writeUTF(f, s, maxlen=0, encoding="utf_8"):
     f.write(encoded)
     f.writeByte(0x00)
     return len(encoded)
+
+
+def readFontGlyphs(file):
+    glyphs = {}
+    with codecs.open(file, "r", "utf-8") as f:
+        fontconfig = common.getSection(f, "")
+        for c in fontconfig:
+            charlen = int(fontconfig[c][0])
+            glyphs[c.replace("<3D>", "=")] = common.FontGlyph(0, charlen, charlen)
+    return glyphs

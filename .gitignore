@@ -4,4 +4,7 @@ build
 data*
 *.log
 *.exe
+*.dll
 notes.md
+font
+info.txt

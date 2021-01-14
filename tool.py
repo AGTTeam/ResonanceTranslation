@@ -129,6 +129,11 @@ def dupe():
             common.logMessage("Dupe", seen[line][2], line + "=")
 
 
+@common.cli.command()
+def font():
+    psp.extractFontData("font/jpn0.pgf", "data/fontconfig.txt")
+
+
 if __name__ == "__main__":
     click.echo("ResonanceTranslation version " + version)
     if not os.path.isdir("data"):

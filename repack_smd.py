@@ -7,6 +7,7 @@ from hacktools import common
 def run(ps2):
     infolder = "data/extract/PSP_GAME/USRDIR/Shibusen/Message/"
     outfolder = "data/repack/PSP_GAME/USRDIR/Shibusen/Message/"
+    fontconfig = "data/fontconfig.txt"
     if ps2:
         outfolder_ps2 = outfolder.replace("repack/PSP_GAME/USRDIR/", "repack_PS2_DATA/")
         common.copyFolder(outfolder, outfolder_ps2)
@@ -17,6 +18,8 @@ def run(ps2):
     if not os.path.isfile(infile):
         common.logError("Input file", infile, "not found")
         return
+
+    glyphs = game.readFontGlyphs(fontconfig)
 
     common.logMessage("Repacking SMD from", infile, "...")
     with codecs.open(infile, "r", "utf-8") as smd:
@@ -55,6 +58,7 @@ def run(ps2):
                         elif check in commonsection:
                             newsjis = commonsection[check][0]
                         if newsjis != "":
+                            newsjis = common.wordwrap(newsjis, glyphs, game.wordwrap)
                             game.writeShiftJIS(f, newsjis)
                         else:
                             game.writeShiftJIS(f, check)
