@@ -28,9 +28,6 @@ def run(ps2):
         chartot, transtot = common.getSectionPercentage(commonsection)
         for file in common.showProgress(files):
             section = common.getSection(smd, file)
-            if len(section) == 0:
-                common.copyFile(infolder + file, outfolder + file)
-                continue
             chartot, transtot = common.getSectionPercentage(section, chartot, transtot)
             # Repack the file
             common.logDebug("Processing", file, "...")

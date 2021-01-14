@@ -3,7 +3,7 @@ import click
 import fpk
 from hacktools import common, psp
 
-version = "1.1.0"
+version = "1.1.1"
 isofile = "data/resonance.iso"
 isopatch = "data/resonance_patched.iso"
 patchfile = "data/patch.xdelta"
