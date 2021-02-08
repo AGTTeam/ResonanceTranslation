@@ -36,7 +36,24 @@ def run(ps2):
                     f.seek(8 + i * 4)
                     offset = f.readUInt()
                     f.seek(offset + 16)
-                    utfstr = game.readShiftJIS(f)
-                    if utfstr not in commonstr:
-                        out.write(utfstr + "=\n")
+                    sjis = game.readShiftJIS(f)
+                    if sjis not in commonstr:
+                        out.write(sjis + "=\n")
     common.logMessage("Done! Extracted", len(files), "files")
+
+    mtefile = "data/extract_FPK/Shibusen/Mission/Mission_fpk/MissionTE.mte"
+    if ps2:
+        mtefile = mtefile.replace("extract_FPK", "extract_PS2_FPK")
+    mteout = "data/mte_output.txt"
+    common.logMessage("Extracting MTE to", mteout, "...")
+    with codecs.open(mteout, "w", "utf-8") as out:
+        common.logDebug("Processing", mtefile, "...")
+        with common.Stream(mtefile, "rb") as f:
+            out.write("!FILE:MissionTE.mte\n")
+            for i in range(0x33):
+                basepos = 0x290 + (i * 0x1b8)
+                for strrange in [0x0, 0x1c, 0x38]:
+                    f.seek(basepos + strrange)
+                    sjis = game.readShiftJIS(f)
+                    out.write(sjis + "=\n")
+    common.logMessage("Done! Extracted 1 file")

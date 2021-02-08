@@ -61,4 +61,40 @@ def run(ps2):
                             game.writeShiftJIS(f, check)
                     f.seek(size - 1)
                     f.writeZero(1)
+
+    file = "MissionTE.mte"
+    mtefilein = "data/extract_FPK/Shibusen/Mission/Mission_fpk/"
+    mtefileout = mtefilein.replace("extract_FPK", "repack_FPK")
+    if ps2:
+        mtefilein = mtefilein.replace("extract_FPK", "extract_PS2_FPK")
+        mtefileout = mtefileout.replace("repack_FPK", "repack_PS2_FPK")
+    mtein = "data/mte_input.txt"
+    common.logMessage("Repacking MTE from", mtein, "...")
+    with codecs.open(mtein, "r", "utf-8") as mte:
+        section = common.getSection(mte, file)
+        chartot, transtot = common.getSectionPercentage(section, chartot, transtot)
+        common.logDebug("Processing", file, "...")
+        common.copyFolder(mtefilein, mtefileout)
+        with common.Stream(mtefilein + file, "rb") as fin:
+            with common.Stream(mtefileout + file, "rb+") as f:
+                for i in range(0x33):
+                    basepos = 0x290 + (i * 0x1b8)
+                    for strrange in [0x0, 0x1c, 0x38]:
+                        fin.seek(basepos + strrange)
+                        f.seek(fin.tell())
+                        check = game.readShiftJIS(fin)
+                        newsjis = ""
+                        if check in section:
+                            newsjis = section[check].pop(0)
+                            if len(section[check]) == 0:
+                                del section[check]
+                        if newsjis != "":
+                            if strrange == 0x38:
+                                newsjis = common.wordwrap(newsjis, glyphs, game.wordwrap_mission)
+                            game.writeShiftJIS(f, newsjis)
+                            # Pad with 0s
+                            while f.tell() < fin.tell():
+                                f.writeByte(0)
+                        else:
+                            game.writeShiftJIS(f, check)
     common.logMessage("Done! Translation is at {0:.2f}%".format((100 * transtot) / chartot))
