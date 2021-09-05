@@ -36,7 +36,8 @@ def run(ps2):
         common.logMessage("Signing BIN ...")
         sign_np = common.bundledExecutable("sign_np.exe")
         if not os.path.isfile(sign_np):
-            common.logError("sign_np not found")
+            common.logMessage("sign_np not found, copying BOOT to EBOOT...")
+            common.copyFile(binout, ebinout)
         else:
             common.execute(sign_np + " -elf {binout} {ebinout} 2".format(binout=binout, ebinout=ebinout), False)
             common.logMessage("Done!")
