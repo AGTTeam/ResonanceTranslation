@@ -3,7 +3,7 @@ import click
 import fpk
 from hacktools import common, psp
 
-version = "1.2.0"
+version = "1.3.0"
 isofile = "data/resonance.iso"
 isopatch = "data/resonance_patched.iso"
 patchfile = "data/patch.xdelta"
@@ -33,10 +33,11 @@ replacefolder_ps2 = "data/replace_PS2/"
 @click.option("--ps2", is_flag=True, default=False)
 @click.option("--bin", is_flag=True, default=False)
 @click.option("--smd", is_flag=True, default=False)
+@click.option("--csv", is_flag=True, default=False)
 @click.option("--img", is_flag=True, default=False)
 @click.option("--cmp", is_flag=True, default=False)
-def extract(iso, ps2, bin, smd, img, cmp):
-    all = not iso and not ps2 and not bin and not smd and not img
+def extract(iso, ps2, bin, smd, csv, img, cmp):
+    all = not iso and not ps2 and not bin and not smd and not csv and not img
     if all or iso:
         psp.extractIso(isofile, infolder, outfolder)
         fpk.extractFolder(fpkin, fpkout)
@@ -54,6 +55,9 @@ def extract(iso, ps2, bin, smd, img, cmp):
         extract_bin.run(False)
         if os.path.isfile(isofile_ps2):
             extract_bin.run(True)
+    if all or csv:
+        import extract_csv
+        extract_csv.run(False)
     if all or smd:
         import extract_smd
         extract_smd.run(False)
@@ -69,16 +73,22 @@ def extract(iso, ps2, bin, smd, img, cmp):
 @click.option("--no-ps2", is_flag=True, default=False)
 @click.option("--bin", is_flag=True, default=False)
 @click.option("--smd", is_flag=True, default=False)
+@click.option("--csv", is_flag=True, default=False)
 @click.option("--img", is_flag=True, default=False)
-def repack(no_psp, no_ps2, bin, smd, img):
+def repack(no_psp, no_ps2, bin, smd, csv, img):
     if not os.path.isfile(isofile_ps2):
         no_ps2 = True
-    all = not bin and not smd and not img
+    all = not bin and not smd and not csv and not img
     if all or smd:
         import repack_smd
         repack_smd.run(False)
         if not no_ps2:
             repack_smd.run(True)
+    if all or csv:
+        import repack_csv
+        repack_csv.run(False)
+        if not no_ps2:
+            repack_csv.run(True)
     if all or bin:
         import repack_bin
         repack_bin.run(False)
