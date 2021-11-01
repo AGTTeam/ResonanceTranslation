@@ -8,14 +8,16 @@ def run(ps2):
         binfile = "data/extract_PS2/SLPS_259.12;1"
         outfile = "data/bin_output_PS2.txt"
         outfile_psp = "data/bin_output.txt"
+        elfsections = [".rodata", ".sdata"]
     else:
         binfile = "data/extract/PSP_GAME/SYSDIR/BOOT.BIN"
         outfile = "data/bin_output.txt"
+        elfsections = [".rodata"]
 
     common.logMessage("Extracting BIN to", outfile, "...")
     elf = psp.readELF(binfile)
-    foundstrings = psp.extractBinaryStrings(elf, [], binfile, game.detectShiftJIS)
-    foundstrings = psp.extractBinaryStrings(elf, foundstrings, binfile, game.detectUTF, "utf_8")
+    foundstrings = psp.extractBinaryStrings(elf, [], binfile, game.detectShiftJIS, elfsections=elfsections)
+    foundstrings = psp.extractBinaryStrings(elf, foundstrings, binfile, game.detectUTF, "utf_8", elfsections=elfsections)
     if ps2:
         newfound = []
         with codecs.open(outfile_psp, "r", "utf-8") as sectionfile:

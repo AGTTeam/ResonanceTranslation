@@ -9,11 +9,13 @@ def run(ps2):
         binin = "data/extract_PS2/SLPS_259.12;1"
         binout = "data/repack_PS2/SLPS_259.12;1"
         binpatch = "bin_patch_PS2.asm"
+        elfsections = [".rodata", ".sdata"]
     else:
         binin = "data/extract/PSP_GAME/SYSDIR/BOOT.BIN"
         binout = "data/repack/PSP_GAME/SYSDIR/BOOT.BIN"
         ebinout = "data/repack/PSP_GAME/SYSDIR/EBOOT.BIN"
         binpatch = "bin_patch.asm"
+        elfsections = [".rodata"]
     binfile = "data/bin_input.txt"
 
     if not os.path.isfile(binfile):
@@ -28,8 +30,8 @@ def run(ps2):
         chartot, transtot = common.getSectionPercentage(section)
     elf = psp.readELF(binin)
     common.copyFile(binin, binout)
-    psp.repackBinaryStrings(elf, section, binin, binout, game.detectShiftJIS, game.writeShiftJIS)
-    psp.repackBinaryStrings(elf, section, binin, binout, game.detectUTF, game.writeUTF, "utf_8")
+    psp.repackBinaryStrings(elf, section, binin, binout, game.detectShiftJIS, game.writeShiftJIS, elfsections=elfsections)
+    psp.repackBinaryStrings(elf, section, binin, binout, game.detectUTF, game.writeUTF, "utf_8", elfsections=elfsections)
     common.logMessage("Done! Translation is at {0:.2f}%".format((100 * transtot) / chartot))
     common.armipsPatch(common.bundledFile(binpatch))
     if not ps2:
