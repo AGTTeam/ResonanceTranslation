@@ -7,10 +7,15 @@ from hacktools import common
 def run(ps2):
     infolder = "data/extract/PSP_GAME/USRDIR/Shibusen/Message/"
     outfolder = "data/repack/PSP_GAME/USRDIR/Shibusen/Message/"
+    mtefilein = "data/extract_FPK/Shibusen/Mission/Mission_fpk/"
+    mtefileout = mtefilein.replace("extract_FPK", "repack_FPK")
     fontconfig = "data/fontconfig.txt"
     if ps2:
         outfolder_ps2 = outfolder.replace("repack/PSP_GAME/USRDIR/", "repack_PS2_DATA/")
         common.copyFolder(outfolder, outfolder_ps2)
+        mtefilein = mtefileout.replace("extract_FPK", "repack_FPK")
+        mtefileout = mtefileout.replace("repack_FPK", "repack_PS2_FPK")
+        common.copyFolder(mtefilein, mtefileout)
         return
     infile = "data/smd_input.txt"
     chartot = transtot = 0
@@ -63,11 +68,6 @@ def run(ps2):
                     f.writeZero(1)
 
     file = "MissionTE.mte"
-    mtefilein = "data/extract_FPK/Shibusen/Mission/Mission_fpk/"
-    mtefileout = mtefilein.replace("extract_FPK", "repack_FPK")
-    if ps2:
-        mtefilein = mtefilein.replace("extract_FPK", "extract_PS2_FPK")
-        mtefileout = mtefileout.replace("repack_FPK", "repack_PS2_FPK")
     mtein = "data/mte_input.txt"
     common.logMessage("Repacking MTE from", mtein, "...")
     with codecs.open(mtein, "r", "utf-8") as mte:
