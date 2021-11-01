@@ -17,7 +17,6 @@ def run(ps2):
         extractfpkfolder = "data/extract_FPK/"
         repackfolder = "data/repack/PSP_GAME/USRDIR/"
         repackfpkfolder = "data/repack_FPK/"
-        common.makeFolder(repackfpkfolder)
 
     common.logMessage("Repacking GIM from", workfolder, "...")
     files = common.getFiles(extractfolder, ".gim") + common.getFiles(extractfpkfolder, ".gim")
