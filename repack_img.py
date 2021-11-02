@@ -23,6 +23,8 @@ def run(ps2):
     for file in common.showProgress(files):
         common.logDebug("Processing", file, "...")
         pngfile = workfolder + file.replace(".gim", ".png")
+        if ps2 and not os.path.isfile(pngfile):
+            pngfile = pngfile.replace("work_PS2_IMG", "work_IMG")
         folder = extractfolder
         repack = repackfolder
         if not os.path.isfile(folder + file):
@@ -30,10 +32,9 @@ def run(ps2):
             repack = repackfpkfolder
         common.makeFolders(os.path.dirname(repack + file))
         common.copyFile(folder + file, repack + file)
-        if not os.path.isfile(pngfile):
-            continue
-        gim = psp.readGIM(folder + file)
-        psp.writeGIM(repack + file, gim, pngfile)
+        if os.path.isfile(pngfile):
+            gim = psp.readGIM(folder + file)
+            psp.writeGIM(repack + file, gim, pngfile)
 
     common.logMessage("Repacking GMO from", workfolder, "...")
     files = common.getFiles(extractfolder, ".gmo") + common.getFiles(extractfpkfolder, ".gmo")
@@ -52,16 +53,7 @@ def run(ps2):
                 gim = gmo.gims[i]
                 if gim is not None:
                     pngfile = workfolder + file + "/" + gmo.names[i] + ".png"
+                    if ps2 and not os.path.isfile(pngfile):
+                        pngfile = pngfile.replace("work_PS2_IMG", "work_IMG")
                     if os.path.isfile(pngfile):
                         psp.writeGIM(repack + file, gim, pngfile)
-
-    # Merge same files from PSP to PS2
-    if ps2:
-        repackfiles = common.getFiles(repackfolder_psp)
-        for repackfile in repackfiles:
-            if os.path.isfile(repackfolder + repackfile):
-                common.copyFile(repackfolder_psp + repackfile, repackfolder + repackfile)
-        repackfiles = common.getFiles(repackfpkfolder_psp)
-        for repackfile in repackfiles:
-            if os.path.isfile(repackfpkfolder + repackfile):
-                common.copyFile(repackfpkfolder_psp + repackfile, repackfpkfolder + repackfile)
