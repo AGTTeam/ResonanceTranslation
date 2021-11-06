@@ -1,4 +1,5 @@
 import codecs
+import json
 from hacktools import common
 
 # Control codes found in strings
@@ -134,6 +135,6 @@ def readFontGlyphs(file):
     with codecs.open(file, "r", "utf-8") as f:
         fontconfig = common.getSection(f, "")
         for c in fontconfig:
-            charlen = int(fontconfig[c][0])
+            charlen = float(json.loads(fontconfig[c][0])["advance"]["x"]) * 0.66666 + 1.0
             glyphs[c.replace("<3D>", "=")] = common.FontGlyph(0, charlen, charlen)
     return glyphs
