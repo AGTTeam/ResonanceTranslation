@@ -3,7 +3,7 @@ import click
 import fpk
 from hacktools import common, psp
 
-version = "1.4.1"
+version = "1.4.2"
 isofile = "data/resonance.iso"
 isopatch = "data/resonance_patched.iso"
 patchfile = "data/patch.xdelta"
@@ -26,7 +26,6 @@ fpkrepack_ps2 = "data/repack_PS2_FPK/"
 infolder_ps2 = "data/extract_PS2/"
 outfolder_ps2 = "data/repack_PS2/"
 replacefolder_ps2 = "data/replace_PS2/"
-fontfile_ps2 = "data/extract_PS2_DATA/file227.bin"
 
 
 @common.cli.command()

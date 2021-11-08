@@ -16,6 +16,12 @@
   HARDCODED_SPACE:
   jr ra
   li v0,4
+
+  TWEAK_ADVENTURE_TEXT:
+  li t7,0x90
+  mtc1 t7,f12
+  jr ra
+  cvt.s.w f12,f12
   .endarea
 
 ;The space advancement is harcoded, for some reason
@@ -43,6 +49,18 @@
 ;Write adventure difficulty as variable width instead of fixed width
 .org 0x00240d18
   li a0,0x1
+.org 0x00244ab0
+  li a0,0x1
+
+;Tweak position of adventure mission text
+.org 0x00240d70
+  li a0,0x90
+.org 0x00244af8
+  li a0,0x90
+.org 0x00240e08
+  jal TWEAK_ADVENTURE_TEXT
+.org 0x00244b90
+  jal TWEAK_ADVENTURE_TEXT
 
 ;Load the actual advancement from the font
 .org 0x0018a8ac
