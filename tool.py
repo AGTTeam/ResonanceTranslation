@@ -3,7 +3,7 @@ import click
 import fpk
 from hacktools import common, psp
 
-version = "1.4.0"
+version = "1.4.1"
 isofile = "data/resonance.iso"
 isopatch = "data/resonance_patched.iso"
 patchfile = "data/patch.xdelta"
@@ -18,8 +18,6 @@ fpkrepack = "data/repack_FPK/"
 outfolder = "data/repack/"
 outdatafolder = "data/repack/PSP_GAME/USRDIR/"
 replacefolder = "data/replace/"
-fontfile = "data/pspfont.pgf"
-fontinject = "PSP_GAME/USRDIR/OutGame/Ending/PS2_staff_role_ex.gmo"
 
 fpkout_ps2 = "data/extract_PS2_FPK/"
 data_ps2 = "data/extract_PS2_DATA/"
@@ -28,6 +26,7 @@ fpkrepack_ps2 = "data/repack_PS2_FPK/"
 infolder_ps2 = "data/extract_PS2/"
 outfolder_ps2 = "data/repack_PS2/"
 replacefolder_ps2 = "data/replace_PS2/"
+fontfile_ps2 = "data/extract_PS2_DATA/file227.bin"
 
 
 @common.cli.command()
@@ -37,9 +36,10 @@ replacefolder_ps2 = "data/replace_PS2/"
 @click.option("--smd", is_flag=True, default=False)
 @click.option("--csv", is_flag=True, default=False)
 @click.option("--img", is_flag=True, default=False)
+@click.option("--font", is_flag=True, default=False)
 @click.option("--cmp", is_flag=True, default=False)
-def extract(iso, ps2, bin, smd, csv, img, cmp):
-    all = not iso and not ps2 and not bin and not smd and not csv and not img
+def extract(iso, ps2, bin, smd, csv, img, font, cmp):
+    all = not iso and not ps2 and not bin and not smd and not csv and not img and not font
     if all or iso:
         psp.extractIso(isofile, infolder, outfolder)
         fpk.extractFolder(fpkin, fpkout)
@@ -60,6 +60,11 @@ def extract(iso, ps2, bin, smd, csv, img, cmp):
     if all or csv:
         import extract_csv
         extract_csv.run(False)
+    if all or font:
+        import extract_font
+        extract_font.run(False)
+        if os.path.isfile(isofile_ps2):
+            extract_font.run(True)
     if all or smd:
         import extract_smd
         extract_smd.run(False)
@@ -102,18 +107,11 @@ def repack(no_psp, no_ps2, bin, smd, csv, img, font):
         repack_img.run(False)
         if not no_ps2:
             repack_img.run(True)
-    if (all or font) and os.path.isfile(fontfile):
-        fontin = infolder + fontinject
-        fontout = fontin.replace(infolder, outfolder)
-        psp.repackPGFData(fontfile, fontout, "data/fontconfig.txt")
-        # Check that the injected font file has the correct length, or pad with 0s
-        insize = os.path.getsize(fontin)
-        outsize = os.path.getsize(fontout)
-        if outsize < insize:
-            with common.Stream(fontout, "rb+") as f:
-                f.seek(outsize)
-                while f.tell() < insize:
-                    f.writeByte(0)
+    if all or font:
+        import repack_font
+        repack_font.run(False)
+        if not no_ps2:
+            repack_font.run(True)
     if os.path.isdir(replacefolder):
         common.mergeFolder(replacefolder, outfolder)
     if os.path.isdir(replacefolder_ps2) and not no_ps2:
@@ -152,11 +150,6 @@ def dupe():
     for line in seen:
         if seen[line][2] > 2:
             common.logMessage("Dupe", seen[line][2], line + "=")
-
-
-@common.cli.command()
-def font():
-    psp.extractPGFData(fontfile, "data/fontconfig_output.txt")
 
 
 if __name__ == "__main__":

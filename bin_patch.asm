@@ -43,11 +43,15 @@
   div.s f13,f13,f14
   j FONT_WIDTH_RET
   mtc1 a0,f14
+  FONT_WIDTH_ADVENTURE:
+  li a1,64
+  mfc1 a0,f14
+  mtc1 a1,f14
+  cvt.s.w f14,f14
+  div.s f12,f12,f14
+  j FONT_WIDTH_ADVENTURE_RET
+  mtc1 a0,f14
 
-  HARDCODED_SPACE:
-  li v0,4
-  jr ra
-  mtc1 v0,f12
   .endarea
 
 .org 0x08991104
@@ -57,7 +61,7 @@
   .endarea
 
 ;Proper VWF using the advance setting of the PGF font
-.org 0x880f1e0
+.org 0x0880f1e0
   ;Original code:
   ;lw a0,0xc(s3)  (left)
   ;lw a1,0x4(s3)  (width)
@@ -70,11 +74,22 @@
   j FONT_WIDTH
   nop
   FONT_WIDTH_RET:
+.org 0x0880f52c
+  lw a0,0x34(a0)
+  mtc1 a0,f12
+  cvt.s.w f12,f12
+  j FONT_WIDTH_ADVENTURE
+  nop
+  FONT_WIDTH_ADVENTURE_RET:
 
 ;The space advancement is harcoded, for some reason
 .org 0x0880ed80
   jal HARDCODED_SPACE
 .org 0x0880edac
+  jal HARDCODED_SPACE
+.org 0x0880f3c8
+  jal HARDCODED_SPACE
+.org 0x0880f3f4
   jal HARDCODED_SPACE
 ;Keep the width always the same instead of multiplying it
 .org 0x0880ed8c
@@ -82,6 +97,20 @@
   nop
 .org 0x0880edB8
   nop
+.org 0x0880f3d4
+  nop
+  nop
+.org 0x0880f400
+  nop
+;More hardcoded space length
+.org 0x088506b0
+  j HARDCODED_SPACE_ADVENTURE
+  nop
+  HARDCODED_SPACE_ADVENTURE_RET:
+
+;Write adventure difficulty as variable width instead of fixed width
+.org 0x088f9798
+  li a0,0x1
 
 ;Set the language to 1 (English) and buttonSwap to 1 (X) for syscalls
 ;sceImposeSetLanguageMode
@@ -124,6 +153,17 @@
   li a1,0x0
   j HACK_RETURN
   li a3,0x0
+
+  HARDCODED_SPACE:
+  li v0,4
+  jr ra
+  mtc1 v0,f12
+
+  HARDCODED_SPACE_ADVENTURE:
+  li s1,4
+  mtc1 s1,f12
+  j HARDCODED_SPACE_ADVENTURE_RET
+  cvt.s.w f12,f12
   .endarea
 
 .close
