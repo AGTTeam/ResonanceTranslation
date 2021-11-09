@@ -15,7 +15,7 @@
   ;Return an hardcoded length for the space
   HARDCODED_SPACE:
   jr ra
-  li v0,4
+  li v0,6
 
   TWEAK_ADVENTURE_TEXT:
   li t7,0x90

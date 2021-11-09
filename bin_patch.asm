@@ -58,12 +58,12 @@
   li a0,1
 
   HARDCODED_SPACE:
-  li v0,4
+  li v0,6
   jr ra
   mtc1 v0,f12
 
   HARDCODED_SPACE_ADVENTURE:
-  li s1,4
+  li s1,5
   mtc1 s1,f12
   j HARDCODED_SPACE_ADVENTURE_RET
   cvt.s.w f12,f12
