@@ -7,8 +7,8 @@ codes = [0x0D, 0x0A]
 # Control codes found in BIN strings
 bincodes = [0x0A, 0x20]
 # Wordwrap value
-wordwrap = 290
-wordwrap_mission = 300
+wordwrap = 332
+wordwrap_mission = 340
 
 
 def readShiftJIS(f, encoding="shift_jis"):
