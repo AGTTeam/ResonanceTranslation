@@ -22,6 +22,11 @@
   mtc1 t7,f12
   jr ra
   cvt.s.w f12,f12
+
+  LORD_DEATH:
+  .asciiz "Lord Death"
+  LORD_DEATH_2P:
+  .asciiz "2P Lord Death"
   .endarea
 
 ;The space advancement is harcoded, for some reason
@@ -75,6 +80,18 @@
   j LOAD_FONT_PARAMETER
   .skip 4
   LOAD_FONT_PARAMETER_RET:
+
+;Hardcode Lord Death's name since it's too long to fit
+.org 0x001d4614
+  lui t7,hi(LORD_DEATH)
+  .skip 4
+  addiu v0,t7,lo(LORD_DEATH)
+.org 0x001d46f4
+  lui t7,hi(LORD_DEATH_2P)
+  .skip 4
+  addiu v0,t7,lo(LORD_DEATH_2P)
+.org 0x0048c35c
+  dw LORD_DEATH
 
 ;Swap Circle with Cross
 .org 0x002cc884

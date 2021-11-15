@@ -21,6 +21,11 @@
 ;Replace some error codes
 .org 0x089931d4
   .area 0x15f
+  LORD_DEATH:
+  .asciiz "Lord Death"
+  LORD_DEATH_2P:
+  .asciiz "2P Lord Death"
+  .align
 
   ;Load the font path and call sceFontOpenUserFile
   SCEFONT_HACK:
@@ -163,6 +168,17 @@
   j TWEAK_ADVENTURE_TEXT2
   li a0,0x68
   TWEAK_ADVENTURE_TEXT2_RET:
+
+;Hardcode Lord Death's name since it's too long to fit
+BASEPTR equ 0x08804000
+.org 0x08869d20
+  lui v0,hi(LORD_DEATH - BASEPTR)
+  addiu v0,v0,lo(LORD_DEATH - BASEPTR)
+.org 0x08869eb4
+  lui v0,hi(LORD_DEATH_2P - BASEPTR)
+  addiu v0,v0,lo(LORD_DEATH_2P - BASEPTR)
+.org 0x089a4214
+  dw LORD_DEATH - BASEPTR
 
 ;Set the language to 1 (English) and buttonSwap to 1 (X) for syscalls
 ;sceImposeSetLanguageMode
