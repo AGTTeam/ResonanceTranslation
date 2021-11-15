@@ -93,6 +93,10 @@
 .org 0x0048c35c
   dw LORD_DEATH
 
+;Fix Memory Card format message being off-center
+.org 0x002a5d04
+  li a1,0x0
+
 ;Swap Circle with Cross
 .org 0x002cc884
   j HACK         ;Original: li v1,0x70
