@@ -60,7 +60,7 @@ def run(ps2):
                         elif check in commonsection:
                             newsjis = commonsection[check][0]
                         if newsjis != "":
-                            newsjis = common.wordwrap(newsjis, glyphs, game.wordwrap)
+                            newsjis = common.wordwrap(newsjis, glyphs, game.wordwrap, game.detectTextCode, 16)
                             game.writeShiftJIS(f, newsjis)
                         else:
                             game.writeShiftJIS(f, check)
@@ -90,7 +90,7 @@ def run(ps2):
                                 del section[check]
                         if newsjis != "":
                             if strrange == 0x38:
-                                newsjis = common.wordwrap(newsjis, glyphs, game.wordwrap_mission)
+                                newsjis = common.wordwrap(newsjis, glyphs, game.wordwrap_mission, game.detectTextCode, 16)
                             game.writeShiftJIS(f, newsjis)
                             # Pad with 0s
                             while f.tell() < fin.tell():

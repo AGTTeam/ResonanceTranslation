@@ -130,6 +130,17 @@ def writeUTF(f, s, maxlen=0, encoding="utf_8"):
     return len(encoded)
 
 
+def detectTextCode(s, i=0):
+    if s[i] == "[":
+        check = s[i:i+3]
+        if check == "[c]":
+            return 3
+        check = s[i:i+4]
+        if check == "[/c]":
+            return 4
+    return 0
+
+
 def readFontGlyphs(file):
     glyphs = {}
     with codecs.open(file, "r", "utf-8") as f:
