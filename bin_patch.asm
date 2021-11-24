@@ -34,15 +34,10 @@
   lw a0,-0xe90(s0)
   li a1,FONT_PATH
   li a2,0x1
-  jal SCEFONT_SYSCALL
+  jal 0x08982340
   move a3,sp
   j SCEFONT_HACK_RET
   nop
-
-  ;Just an hardcoded sceFontOpenUserFile syscall
-  SCEFONT_SYSCALL:
-  jr ra
-  .dw 0x0044028c
 
   ;Divide the font advancement by 64
   FONT_WIDTH:
@@ -179,6 +174,10 @@ BASEPTR equ 0x08804000
   addiu v0,v0,lo(LORD_DEATH_2P - BASEPTR)
 .org 0x089a4214
   dw LORD_DEATH - BASEPTR
+
+;Change sceFontOpen NID to sceFontOpenUserFile
+.org 0x08982ad0
+  .dw 0x57fcb733
 
 ;Set the language to 1 (English) and buttonSwap to 1 (X) for syscalls
 ;sceImposeSetLanguageMode
