@@ -61,6 +61,8 @@ def run(ps2):
                             newsjis = commonsection[check][0]
                         if newsjis != "":
                             newsjis = common.wordwrap(newsjis, glyphs, game.wordwrap, game.detectTextCode, 16)
+                            if newsjis.count("|") > 2:
+                                common.logError("Too many line breaks:", newsjis)
                             game.writeShiftJIS(f, newsjis)
                         else:
                             game.writeShiftJIS(f, check)

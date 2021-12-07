@@ -26,14 +26,6 @@ def run(ps2):
         fontin = fontinject
         fontout = fontin.replace("extract", "repack")
         psp.repackPGFData(fontfile, fontout, "data/fontconfig.txt")
-        # Check that the injected font file has the correct length, or pad with 0s
-        insize = os.path.getsize(fontin)
-        outsize = os.path.getsize(fontout)
-        if outsize < insize:
-            with common.Stream(fontout, "rb+") as f:
-                f.seek(outsize)
-                while f.tell() < insize:
-                    f.writeByte(0)
     else:
         fontin = fontfile
         fontout = fontin.replace("extract", "repack")

@@ -94,11 +94,11 @@
         },
         "hacktools": {
             "hashes": [
-                "sha256:1e0b29af5ec16d4f9dead2a89450c2e65e771100431b628f7b9717d80f9cf6e7",
-                "sha256:e548b3aea08d040d4cf496c7f8a3dcd18259d1aa2b73ad969c7761a87ae79431"
+                "sha256:3f5a8d20f4dc974726aab488e85e11b2a01d62545b8f4b60aed7a72ffe019f3b",
+                "sha256:a6a1a3597ab5a44fa6db8b62d57eb71da739b7a97aadd9125a18f0618094c65c"
             ],
             "index": "pypi",
-            "version": "==0.21.2"
+            "version": "==0.23.2"
         },
         "ips-util": {
             "hashes": [
@@ -249,10 +249,10 @@
         },
         "pyinstaller-hooks-contrib": {
             "hashes": [
-                "sha256:169b09802a19f83593114821d6ba0416a05c7071ef0ca394f7bfb7e2c0c916c8",
-                "sha256:a52bc3834281266bbf77239cfc9521923336ca622f44f90924546ed6c6d3ad5e"
+                "sha256:60a57e4057fa2183bbaa81f10401a27eb7dd701ef8a11b287bb6345b571f94e7",
+                "sha256:775b52200b39e12c95cc24f809eb050a97110fee819d178ebfde214f0f51e5f4"
             ],
-            "version": "==2021.3"
+            "version": "==2021.4"
         },
         "pywin32-ctypes": {
             "hashes": [

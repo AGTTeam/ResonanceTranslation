@@ -3,7 +3,7 @@ import click
 import fpk
 from hacktools import common, psp
 
-version = "1.4.4"
+version = "1.4.5"
 isofile = "data/resonance.iso"
 isopatch = "data/resonance_patched.iso"
 patchfile = "data/patch.xdelta"
@@ -121,7 +121,7 @@ def repack(no_psp, no_ps2, bin, smd, csv, img, font):
         fpk.repackFolder(fpkout, fpkrepack, fpkin, fpkout, fpkrepack, "2")
         common.logMessage("Repacking FPK ...")
         fpk.repackFolder(fpkin, outdatafolder, fpkin, fpkout, fpkrepack)
-        psp.repackIso(isofile, isopatch, outfolder, patchfile)
+        psp.repackUMD(isofile, isopatch, outfolder, patchfile)
 
     if not no_ps2:
         common.logMessage("Repacking nested FPK ...")
