@@ -5,7 +5,7 @@ block_cipher = None
 
 a = Analysis(['tool.py'],
              pathex=['D:\\roms\\resonance'],
-             binaries=[('xdelta.exe', '.'), ('sign_np.exe', '.'), ('armips.exe', '.')],
+             binaries=[('xdelta.exe', '.'), ('sign_np.exe', '.'), ('armips.exe', '.'), ('UMD-replace.exe', '.')],
              datas=[('bin_patch.asm', '.'), ('bin_patch_PS2.asm', '.')],
              hiddenimports=['pkg_resources.py2_warn'],
              hookspath=[],
