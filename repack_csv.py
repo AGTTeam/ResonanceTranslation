@@ -24,6 +24,7 @@ def run(ps2):
         common.logDebug("Processing", outfilein, "...")
         with codecs.open(outfilein, "r", "shift_jis") as f:
             lines = f.readlines()
+        common.makeFolders(os.path.dirname(outfile))
         with codecs.open(outfile, "w", "shift_jis") as fout:
             for i in range(len(lines)):
                 if i < 8 or i >= len(lines) - 16:
