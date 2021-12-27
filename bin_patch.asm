@@ -81,7 +81,10 @@
   cvt.s.w f12,f12
 
   SWAP_CIRCLE_CROSS:
-  lbu a1,0x9(s0)
+  move s1,v0
+  move t0,s0
+  @@loop:
+  lbu a1,0x9(t0)
   srl a2,a1,5
   srl a3,a1,6
   xor a2,a2,a3
@@ -90,8 +93,13 @@
   sll a2,a2,6
   or a2,a2,a3
   xor a1,a1,a2
-  sb a1,0x9(s0)
+  sb a1,0x9(t0)
+  addiu s1,s1,-0x1
+  addiu t0,t0,0x10
+  bne s1,zero,@@loop
   li a1,0x0
+  li t0,0x0
+  li a2,0x0
   j SWAP_CIRCLE_CROSS_RET
   li a3,0x0
   .endarea
