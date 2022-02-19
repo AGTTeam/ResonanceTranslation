@@ -183,6 +183,50 @@ BASEPTR equ 0x08804000
 .org 0x089a4214
   dw LORD_DEATH - BASEPTR
 
+;Translate hardcoded matchmaking lines
+;"「対戦しましょう！」"
+.org 0x088b7e68
+  .area 0x4c,0x0
+  lui a0,0x4847      ;GH
+  .skip 8
+  lui a0,0x4847      ;GH
+  addiu a0,a0,0x4946 ;FI
+  li a1,0x20202154   ;T!
+  .skip 8
+  li a0,0x20202020
+  sw a0,0x8(s6)
+  li a0,0x20202020
+  sw a0,0xc(s6)
+  sw zero,0x10(s6)
+  sb zero,0x14(s6)
+  .endarea
+;"…他の方へ対戦申込中…"
+.org 0x088b8030
+  .area 0x44,0x0
+  li a0,0x6374614d  ;Matc
+  sw a0,0x0(s6)
+  li a0,0x676e6968  ;hing
+  sw a0,0x4(s6)
+  li a0,0x70706f20  ; opp
+  sw a0,0x8(s6)
+  li a0,0x6e656e6f  ;onen
+  sw a0,0xc(s6)
+  li a0,0x2e2e2e74  ;t...
+  sw a0,0x10(s6)
+  sw zero,0x14(s6)
+  .endarea
+;"へ対戦申込中…"
+.org 0x088b7fa8
+  .area 0x2c,0x0
+  li a0,0x6374614d  ;Matc
+  sw a0,0x0(s6)
+  li a0,0x676e6968  ;hing
+  sw a0,0x4(s6)
+  li a0,0x002e2e2e  ;...
+  sw a0,0x8(s6)
+  sw zero,0xc(s6)
+  .endarea
+
 ;Change sceFontOpen NID to sceFontOpenUserFile
 .org 0x08982ad0
   .dw 0x57fcb733
