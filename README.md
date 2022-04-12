@@ -1,4 +1,5 @@
 # Resonance Translation
+This repository is for the tool used to translate the game. If you're looking for the English patch, click [here (PSP)](http://www.romhacking.net/translations/6518/) or [here (PS2)](http://www.romhacking.net/translations/6521/).  
 ## Setup
 Create a "data" folder and copy the PSP image as "resonance.iso" in it, and the PS2 image as "resonance_ps2.iso".  
 ## Run from binary
