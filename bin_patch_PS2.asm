@@ -2,9 +2,8 @@
 .open "data/repack_PS2/SLPS_259.12;1",0x00122000
 
 ;Replace some error code
-.org 0x00490403
-  .db 0
-  .area 0x4b
+.org 0x004903d8
+  .area 0x9c
   ;Load the font advance
   LOAD_FONT_PARAMETER:
   sw zero,0xc(s0)
@@ -22,6 +21,26 @@
   mtc1 t7,f12
   jr ra
   cvt.s.w f12,f12
+
+  SWAP_CROSS_CIRCLE_PRE:
+  move t9,a2
+  j SWAP_CROSS_CIRCLE_PRE_RET
+  SWAP_CROSS_CIRCLE:
+  li v1,0x70
+  lh a0,0x2(t9)
+  andi a1,a0,0x9fff
+  lbu a2,0xe(t9)
+  lbu a3,0xd(t9)
+  andi at,a0,0x4000
+  ori v1,a1,0x2000
+  movn a1,v1,at
+  sb a2,0xd(t9)
+  andi at,a0,0x2000
+  ori v1,a1,0x4000
+  movn a1,v1,at
+  sb a3,0xe(t9)
+  jr ra
+  sh a1,0x2(t9)
 
   LORD_DEATH:
   .asciiz "Lord Death"
@@ -99,32 +118,19 @@
 
 ;Swap Circle with Cross
 .org 0x002cc884
-  j HACK         ;Original: li v1,0x70
+  ;Original: li v1,0x70
+  j SWAP_CROSS_CIRCLE_PRE
   li a0,0x1c
-  HACK_RETURN:
+  SWAP_CROSS_CIRCLE_PRE_RET:
 .org 0x002cc8Ec
-  j HACK2
-;Made with PS2ControllerRemapper
-.org 0x003127d8
-  nop
-  HACK:
-  move t9,a2
-  j HACK_RETURN
-  HACK2:
-  li v1,0x70
-  lh a0,0x2(t9)
-  andi a1,a0,0x9fff
-  lbu a2,0xe(t9)
-  lbu a3,0xd(t9)
-  andi at,a0,0x4000
-  ori v1,a1,0x2000
-  movn a1,v1,at
-  sb a2,0xd(t9)
-  andi at,a0,0x2000
-  ori v1,a1,0x4000
-  movn a1,v1,at
-  sb a3,0xe(t9)
-  jr ra
-  sh a1,0x2(t9)
+  j SWAP_CROSS_CIRCLE
+
+;Redirect the errors we replaced to another one
+.org 0x0026fadc
+  addiu a1,0x3b8
+.org 0x0026fb40
+  addiu a1,0x3b8
+.org 0x0026fbd8
+  addiu a1,0x3b8
 
 .close
