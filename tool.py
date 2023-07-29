@@ -3,11 +3,11 @@ import click
 import fpk
 from hacktools import common, psp
 
-version = "1.4.8"
-isofile = "data/resonance.iso"
+version = "1.5.0"
+isofile = "resonance.iso"
 isopatch = "data/resonance_patched.iso"
 patchfile = "data/patch.xdelta"
-isofile_ps2 = "data/resonance_ps2.iso"
+isofile_ps2 = "resonance_ps2.iso"
 isopatch_ps2 = "data/resonance_patched_ps2.iso"
 patchfile_ps2 = "data/patch_ps2.xdelta"
 
@@ -36,7 +36,7 @@ replacefolder_ps2 = "data/replace_PS2/"
 @click.option("--csv", is_flag=True, default=False)
 @click.option("--img", is_flag=True, default=False)
 @click.option("--font", is_flag=True, default=False)
-@click.option("--cmp", is_flag=True, default=False)
+@click.option("--cmp", is_flag=True, default=False, hidden=True)
 def extract(iso, ps2, bin, smd, csv, img, font, cmp):
     all = not iso and not ps2 and not bin and not smd and not csv and not img and not font
     if all or iso:
@@ -75,8 +75,8 @@ def extract(iso, ps2, bin, smd, csv, img, font, cmp):
 
 
 @common.cli.command()
-@click.option("--no-psp", is_flag=True, default=False)
-@click.option("--no-ps2", is_flag=True, default=False)
+@click.option("--no-psp", is_flag=True, default=False, hidden=True)
+@click.option("--no-ps2", is_flag=True, default=False, hidden=True)
 @click.option("--bin", is_flag=True, default=False)
 @click.option("--smd", is_flag=True, default=False)
 @click.option("--csv", is_flag=True, default=False)
@@ -133,7 +133,7 @@ def repack(no_psp, no_ps2, bin, smd, csv, img, font):
         psp.repackIso(isofile_ps2, isopatch_ps2, outfolder_ps2, patchfile_ps2)
 
 
-@common.cli.command()
+@common.cli.command(hidden=True)
 def dupe():
     seen = {}
     sections = common.getSections("data/smd_input.txt")
@@ -152,8 +152,4 @@ def dupe():
 
 
 if __name__ == "__main__":
-    click.echo("ResonanceTranslation version " + version)
-    if not os.path.isdir("data"):
-        common.logError("data folder not found.")
-        quit()
-    common.runCLI(common.cli)
+    common.setupTool("ResonanceTranslation", version, "data", isofile, 0xd3d7dfec)

@@ -25,7 +25,7 @@ def readShiftJIS(f, encoding="shift_jis"):
             b2 = f.readByte()
             if not common.checkShiftJIS(b1, b2):
                 if b2 == 0x01:
-                    sjis += "UNK(" + common.toHex(b1) + common.toHex(b2) + ")"
+                    sjis += "UNK(" + common.toHex(b1, True) + common.toHex(b2, True) + ")"
                     i += 2
                 else:
                     f.seek(-1, 1)
@@ -83,7 +83,7 @@ def detectShiftJIS(f, encoding="shift_jis"):
             elif b1 == 0x20:
                 ret += " "
             else:
-                ret += "<" + common.toHex(b1) + ">"
+                ret += "<" + common.toHex(b1, True) + ">"
             continue
         elif b1 >= 28 and b1 <= 126:
             ret += chr(b1)
@@ -97,9 +97,9 @@ def detectShiftJIS(f, encoding="shift_jis"):
             except UnicodeDecodeError:
                 if ret.count("UNK(") >= 5:
                     return ""
-                ret += "UNK(" + common.toHex(b1) + common.toHex(b2) + ")"
+                ret += "UNK(" + common.toHex(b1, True) + common.toHex(b2, True) + ")"
         elif len(ret) > 0 and ret.count("UNK(") < 5:
-            ret += "UNK(" + common.toHex(b1) + common.toHex(b2) + ")"
+            ret += "UNK(" + common.toHex(b1, True) + common.toHex(b2, True) + ")"
         else:
             return ""
 
